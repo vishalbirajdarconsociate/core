@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django.contrib.staticfiles',
     'useradmin',
-    'woostore'
+    'woostore',
 ]
 
 MIDDLEWARE = [

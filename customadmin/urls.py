@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('useradmin.urls')),
     path('koms/',include('KOMS.urls')),
+    path('woostore/',include('woostore.urls')),
 ]
