@@ -1,0 +1,4 @@
+*.pyc
+*.pys
+__pycache__
+migrations
