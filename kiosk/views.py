@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import logout
 from useradmin.models import *
+from core.models import *
 from django.db.models import Avg,Q
 from django.http import JsonResponse
 from rest_framework.parsers import JSONParser
@@ -30,3 +31,41 @@ def logout_view(request):
         return JsonResponse({"msg":'user logged out'})
     return JsonResponse({"msg":'not logged in '})
 
+@api_view(['GET'])
+def allCategory(request):
+    data=[]
+    for i in Category.objects.all():
+        data.append({
+      "categoryId": i.pk,
+      "name": i.categoryName,
+      "vendorId": i.vendorId.pk,
+      "description": i.categoryDescription,
+      "image":str(i.categoryImgage)
+        })
+    banner=[
+    {
+      "image":
+          "https://theweekendedition.com.au/wp-content/uploads/sites/6/2017/05/TWE-main-street-burger-bar-08-1100x550-c-center.jpg"
+    },
+    {
+      "image":
+          "https://cdn.bfldr.com/97UXF3S6/at/58qmhsfnxjfffhp2jsmv4x/CraveBurger_Combo.jpg?auto=webp&format=png"
+    },
+    {
+      "image":
+          "https://images.deliveryhero.io/image/fd-pk/LH/v4ce-hero.jpg"
+    },
+    {
+      "image":
+          "https://b.zmtcdn.com/data/pictures/chains/2/18796372/7d4e1122bb98065689b46e87753887aa.jpg?fit=around|771.75:416.25&crop=771.75:416.25;*,*"
+    },
+    {
+      "image":
+          "https://images.squarespace-cdn.com/content/v1/5db7063530eb0e7c27e50381/1573227775511-PMQ13KETDCD0D6H4DNAK/Banner+Image.png?format=2500w"
+    },
+    {
+      "image":
+          "https://www.crazymasalafood.com/wp-content/images/1-37.jpg"
+    }
+  ]
+    return Response({"Category":data,'banner':banner})

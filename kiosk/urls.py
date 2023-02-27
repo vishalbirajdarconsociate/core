@@ -22,4 +22,5 @@ urlpatterns = [
     path('',index),
     path('login/',login,name='kiosk_login'),
     path('logout/',logout_view,name='kiosk_logout'),
+    path('allCategory/',allCategory,name="allCategory")
 ]
