@@ -15,12 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import *
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('useradmin.urls')),
-    path('koms/',include('KOMS.urls')),
-    path('kiosk/',include('kiosk.urls')),
-    path('woostore/',include('woostore.urls')),
+    path('',index),
 ]
