@@ -43,3 +43,36 @@ class ProductCategory(models.Model):
     category=models.ForeignKey(Category, on_delete=models.CASCADE)
     def __str__(self):
         return self.product.productName+" | "+self.category.categoryName
+
+
+class Modifier(models.Model):
+    modifierName=models.CharField(max_length=100)
+    modifierSKU=models.CharField(max_length=50)
+    modifierPrice=models.FloatField(null=True,blank=True)
+    modifierStatus=models.IntegerField(default=0)
+    vendorId=models.ForeignKey(VendorLog, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.modifierName
+    
+
+class ModifierGroup(models.Model):
+    name=models.CharField(max_length=50)
+    SKU=models.CharField( max_length=50)
+    min=models.IntegerField()
+    max=models.IntegerField()
+    vendorId=models.ForeignKey(VendorLog, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
+    
+class ProductModGroup(models.Model):
+    modifierGroup=models.ForeignKey(ModifierGroup, on_delete=models.CASCADE,null=True,blank=True)
+    product=models.ForeignKey(Product, on_delete=models.CASCADE,null=True,blank=True)
+    def __str__(self):
+        return self.modifierGroup+" | "+self.product
+
+class ModifierModGroup(models.Model):
+    modifierGroup=models.ForeignKey(ModifierGroup, on_delete=models.CASCADE,null=True,blank=True)
+    modifier=models.ForeignKey(Modifier, on_delete=models.CASCADE,null=True,blank=True)
+    def __str__(self):
+        return self.modifierGroup+" | "+self.modifier
+    

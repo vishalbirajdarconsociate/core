@@ -29,4 +29,4 @@ def logout_view(request):
         logout(request)
         return JsonResponse({"msg":'user logged out'})
     return JsonResponse({"msg":'not logged in '})
-      
+
