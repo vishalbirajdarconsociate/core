@@ -1,7 +1,7 @@
 from django.db import models
-from useradmin.models import *
+from core.models import *
 
-# Create your models here.
+
 class Customer(models.Model):
     customerFirstName=models.CharField( max_length=50,default='')
     customerLastName=models.CharField( max_length=50,default='')
@@ -15,29 +15,29 @@ class Customer(models.Model):
         return self.customerFirstName
 
 
-class Product(models.Model):
-    productName=models.CharField( max_length=50)
-    SKU=models.CharField( max_length=50)
-    productPrice=models.FloatField()
-    productDesc=models.TextField()
-    productStock=models.IntegerField()
-    productImg=models.ImageField( upload_to='static/images/product/', height_field=None, width_field=None, max_length=None)
-    def __str__(self):
-        return self.productName
+# class Product(models.Model):
+#     productName=models.CharField( max_length=50)
+#     SKU=models.CharField( max_length=50)
+#     productPrice=models.FloatField()
+#     productDesc=models.TextField()
+#     productStock=models.IntegerField()
+#     productImg=models.ImageField( upload_to='static/images/product/', height_field=None, width_field=None, max_length=None)
+#     def __str__(self):
+#         return self.productName
 
-class Category(models.Model):
-    categoryName=models.CharField( max_length=50)
-    categoryDesc=models.TextField()
-    categoryImg=models.ImageField( upload_to='static/images/Category/', height_field=None, width_field=None, max_length=None)
-    def __str__(self):
-        return self.categoryName
+# class Category(models.Model):
+#     categoryName=models.CharField( max_length=50)
+#     categoryDesc=models.TextField()
+#     categoryImg=models.ImageField( upload_to='static/images/Category/', height_field=None, width_field=None, max_length=None)
+#     def __str__(self):
+#         return self.categoryName
 
 
-class ProductCategory(models.Model):
-    product=models.ForeignKey(Product, on_delete=models.CASCADE)
-    category=models.ForeignKey(Category, on_delete=models.CASCADE)
-    def __str__(self):
-        return self.product.productName+" | "+self.category.categoryName
+# class ProductCategory(models.Model):
+#     product=models.ForeignKey(Product, on_delete=models.CASCADE)
+#     category=models.ForeignKey(Category, on_delete=models.CASCADE)
+#     def __str__(self):
+#         return self.product.productName+" | "+self.category.categoryName
 
     
 class Reviews(models.Model):
@@ -76,9 +76,9 @@ class CartContain(models.Model):
     quantity=models.IntegerField()
 
 
-class ProductImages(models.Model):
-    product=models.ForeignKey(Product, on_delete=models.CASCADE)
-    image=models.ImageField(upload_to='static/images/product_images/', height_field=None, width_field=None, max_length=None)
-    def __str__(self):
-        return self.product.productName+" | image "+str(self.pk)
+# class ProductImages(models.Model):
+#     product=models.ForeignKey(Product, on_delete=models.CASCADE)
+#     image=models.ImageField(upload_to='static/images/product_images/', height_field=None, width_field=None, max_length=None)
+#     def __str__(self):
+#         return self.product.productName+" | image "+str(self.pk)
     
