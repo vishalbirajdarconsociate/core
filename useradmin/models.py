@@ -13,7 +13,7 @@ class PermissionGroup(models.Model):
     def __str__(self):
         return self.group_name
 
-class UserLogs(models.Model):
+class VendorLog(models.Model):
     userName = models.CharField(max_length=122)
     email = models.CharField(max_length=122)        
     password = models.CharField(max_length=12)
@@ -23,7 +23,7 @@ class UserLogs(models.Model):
         return self.userName
 
 class Permissions(models.Model):
-    user = models.ForeignKey(UserLogs, on_delete=models.CASCADE,unique=True)
+    user = models.ForeignKey(VendorLog, on_delete=models.CASCADE,unique=True)
     module=models.ManyToManyField(Modules,null=True,blank=True)
     def __str__(self):
         return ("user :"+str(self.user))

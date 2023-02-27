@@ -20,4 +20,6 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('',index),
+    path('login/',login,name='kiosk_login'),
+    path('logout/',logout_view,name='kiosk_logout'),
 ]

@@ -132,5 +132,5 @@ STATICFILES_DIRS =('static/admin/',
                    'static/admin-lte/')
 
 
-CSRF_TRUSTED_ORIGINS = ['https://80c0-2401-4900-1c17-fb3-1a0-b747-90d2-c29d.in.ngrok.io']
+CSRF_TRUSTED_ORIGINS = ['https://80c0-2401-4900-1c17-fb3-1a0-b747-90d2-c29d.in.ngrok.io','http://127.0.0.1:8000/']
 # CSRF_TRUSTED_ORIGINS = ['*']

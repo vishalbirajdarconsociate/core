@@ -10,7 +10,7 @@ def signin(request):
         name = request.POST.get('username')
         password = request.POST.get('password')
         try:
-            result = UserLogs.objects.get(Q(password=password)&(Q(userName=name)|Q(email=name)))
+            result = VendorLog.objects.get(Q(password=password)&(Q(userName=name)|Q(email=name)))
             if result:
                 request.session['user_id'] = result.pk
                 return redirect(home)
@@ -32,7 +32,7 @@ def home(request):
     if not user_id:
         return redirect(signin)
     moduleList = []
-    for user in UserLogs.objects.filter(id=user_id):
+    for user in VendorLog.objects.filter(id=user_id):
         for singleModule in user.module.all():
             moduleList.append(singleModule.pk)
         for group in user.groups.all():
@@ -47,7 +47,7 @@ def home(request):
 # ml = load('/home/vishal/Desktop/vishal/customAdmin/mlmodels/.model.joblib')
 import pandas as pd
 def dfmodule(request):
-    df=pd.DataFrame(list(UserLogs.objects.all().values()))
+    df=pd.DataFrame(list(VendorLog.objects.all().values()))
     print(df)
     print(df['email'])
     return HttpResponse(df)

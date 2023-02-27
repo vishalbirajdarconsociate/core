@@ -13,7 +13,7 @@ class ManyToManyAdmin(admin.ModelAdmin):
 class ModelAdmin(ManyToManyAdmin):
     pass
 
-admin.site.register(UserLogs,ModelAdmin)
+admin.site.register(VendorLog,ModelAdmin)
 admin.site.register(Modules)
 admin.site.register(Permissions,ModelAdmin)
 admin.site.register(PermissionGroup,ModelAdmin)
