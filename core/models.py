@@ -26,7 +26,7 @@ class ProductImages(models.Model):
     
 class Category(models.Model):
     categoryName=models.CharField( max_length=50)
-    categoryParentId=models.IntegerField(default=0,null=True,blank=True)
+    categoryParentId=models.ForeignKey('self', on_delete=models.CASCADE,null=True,blank=True)
     categoryDescription=models.TextField()
     categoryStatus=models.IntegerField(default=0,null=True,blank=True)
     categorySortOrder=models.IntegerField(default=0,null=True,blank=True)
@@ -48,6 +48,7 @@ class ProductCategory(models.Model):
 class Modifier(models.Model):
     modifierName=models.CharField(max_length=100)
     modifierSKU=models.CharField(max_length=50)
+    modifierImg=models.ImageField(upload_to='static/images/modifier_images/',  height_field=None, width_field=None, max_length=None,null=True)
     modifierPrice=models.FloatField(null=True,blank=True)
     modifierStatus=models.IntegerField(default=0)
     vendorId=models.ForeignKey(VendorLog, on_delete=models.CASCADE)
