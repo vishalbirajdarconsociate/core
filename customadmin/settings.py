@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'rest_framework',
     'django.contrib.staticfiles',
+    'core',
     'useradmin',
     'woostore',
 ]
