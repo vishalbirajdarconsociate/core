@@ -69,3 +69,8 @@ def allCategory(request):
     }
   ]
     return Response({"Category":data,'banner':banner})
+
+
+@api_view(["GET"])
+def productByCategory(request):
+    pass
