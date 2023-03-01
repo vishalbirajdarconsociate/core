@@ -71,11 +71,11 @@ class ProductModGroup(models.Model):
     modifierGroup=models.ForeignKey(ModifierGroup, on_delete=models.CASCADE,null=True,blank=True)
     product=models.ForeignKey(Product, on_delete=models.CASCADE,null=True,blank=True)
     def __str__(self):
-        return self.modifierGroup+" | "+self.product
+        return self.modifierGroup.name+" | "+self.product.productName
 
 class ModifierModGroup(models.Model):
     modifierGroup=models.ForeignKey(ModifierGroup, on_delete=models.CASCADE,null=True,blank=True)
     modifier=models.ForeignKey(Modifier, on_delete=models.CASCADE,null=True,blank=True)
     def __str__(self):
-        return self.modifierGroup+" | "+self.modifier
+        return self.modifierGroup.name+" | "+self.modifier.modifierName
     
