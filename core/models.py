@@ -19,9 +19,9 @@ class Product(models.Model):
     
 class ProductImages(models.Model):
     product=models.ForeignKey(Product, on_delete=models.CASCADE)
-    image=models.ImageField(upload_to='static/images/product_images/', height_field=None, width_field=None, max_length=None)
+    image=models.ImageField(upload_to='static/images/product_images/kiosk', height_field=None, width_field=None, max_length=None)
     def __str__(self):
-        return self.product.productName+" | image "+str(self.pk)
+        return self.product.productName+" | image "+str(self.product.productName)
     
     
 class Category(models.Model):

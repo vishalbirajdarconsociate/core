@@ -126,10 +126,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT=os.path.join(BASE_DIR,'static')
+# STATIC_ROOT=os.path.join(BASE_DIR,'static')
 
 STATICFILES_DIRS =('static/admin/',
-                   'static/admin-lte/')
+                   'static/admin-lte/',
+                   os.path.join(BASE_DIR,'static'))
 
 
 CSRF_TRUSTED_ORIGINS = ['https://80c0-2401-4900-1c17-fb3-1a0-b747-90d2-c29d.in.ngrok.io','http://127.0.0.1:8000/']

@@ -81,18 +81,18 @@ def productByCategory(request):
             for k in ProductImages.objects.filter(product=j.pk):
                 images.append(str(k.image))
             mod=[]
-            for m in Modifier.objects.filter(pk__in=(ModifierModGroup.objects.filter(modifierGroup__in=(ModifierGroup.objects.filter(pk=(ProductModGroup.objects.filter(product=j.pk))))))):
-                mod.append(
-                    {
-                        "cost":m.modifierPrice,
-                        "modifierId": m.pk,
-                        "description": m.modifierDesc,
-                        "quantity": m.modifierQty,
-                        "sku": m.modifierSKU,
-                        "status":m.modifierStatus,
-                        "image":m.modifierImg
-                    }                    
-                )
+            # for m in Modifier.objects.filter(pk__in=(ModifierModGroup.objects.filter(modifierGroup__in=(ModifierGroup.objects.filter(pk=(ProductModGroup.objects.filter(product=j.pk))))))):
+            #     mod.append(
+            #         {
+            #             "cost":m.modifierPrice,
+            #             "modifierId": m.pk,
+            #             "description": m.modifierDesc,
+            #             "quantity": m.modifierQty,
+            #             "sku": m.modifierSKU,
+            #             "status":m.modifierStatus,
+            #             "image":m.modifierImg
+            #         }                    
+            #     )
             li.append({
                 "categoryId": i.pk,
                 "categoryName":i.categoryName,
