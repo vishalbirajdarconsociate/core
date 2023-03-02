@@ -75,13 +75,15 @@ def allCategory(request):
 def productByCategory(request):
     products={}
     for i in Category.objects.all():
+        for pr in ProductCategory.objects.filter(category=i.pk):
+            print(pr.product.productName)
         li=[]
-        for j in Product.objects.filter(pk__in=(ProductCategory.objects.filter(category__in=(Category.objects.filter(pk=i.pk))))):
+        for j in Product.objects.filter(pk__in=(ProductCategory.objects.filter(category=i.pk).values('product'))):
             images=[]
             for k in ProductImages.objects.filter(product=j.pk):
                 images.append(str(k.image))
             mod=[]
-            for m in Modifier.objects.filter(pk__in=(ModifierModGroup.objects.filter(modifierGroup__in=(ModifierGroup.objects.filter(pk__in=(ProductModGroup.objects.filter(product=j.pk))))))):
+            for m in Modifier.objects.filter(pk__in=(ModifierModGroup.objects.values('modifier').filter(modifierGroup__in=(ModifierGroup.objects.filter(pk__in=(ProductModGroup.objects.filter(product=j.pk).values('modifierGroup'))))))):
                 mod.append(
                     {
                         "cost":m.modifierPrice,
