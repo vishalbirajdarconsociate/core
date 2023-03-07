@@ -23,5 +23,11 @@ urlpatterns = [
     path('login/',login,name='kiosk_login'),
     path('logout/',logout_view,name='kiosk_logout'),
     path('allCategory/',allCategory,name="allCategory"),
-    path('productByCategory/',productByCategory,name="productByCategory")
+    path('allCategory/<int:id>',allCategory,name="singleCategory"),
+    path('productByCategory/',productByCategory,name="productByCategory"),
+    path('productByCategory/<int:id>',productByCategory,name="singleProductByCategory"),
+    path('productDetails/',productDetails,name="allProduct"),
+    path('productDetails/<int:id>',productDetails,name="singleProduct"),
+    path('productDetails/<str:search>',productDetails,name="searchProduct"),
+    path('addToCart/',addToCart,name="addToCart")
 ]

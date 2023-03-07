@@ -32,8 +32,21 @@ def logout_view(request):
     return JsonResponse({"msg":'not logged in '})
 
 @api_view(['GET'])
-def allCategory(request):
+def allCategory(request,id=0):
+    if request.session.get('user_id') is None:
+        return JsonResponse({"kiosk":"session not found"})
     data=[]
+    if id!=0:
+        i = Category.objects.get(pk=id)
+        data.append({
+      "categoryId": i.pk,
+      "name": i.categoryName,
+      "vendorId": i.vendorId.pk,
+      "description": i.categoryDescription,
+      "image":str(i.categoryImgage)
+        })
+        return Response({"Category":data})
+           
     for i in Category.objects.all():
         data.append({
       "categoryId": i.pk,
@@ -70,13 +83,49 @@ def allCategory(request):
   ]
     return Response({"Category":data,'banner':banner})
 
-
 @api_view(["GET"])
-def productByCategory(request):
+def productByCategory(request,id=0):
+    if request.session.get('user_id') is None:
+        return Response({"kiosk":"session not found"})
     products={}
+    if id!=0:
+        i=Category.objects.get(pk=id)
+        li=[]
+        for j in Product.objects.filter(pk__in=(ProductCategory.objects.filter(category=i.pk).values('product'))):
+            images=[]
+            for k in ProductImages.objects.filter(product=j.pk):
+                images.append(str(k.image))
+            mod=[]
+            for m in Modifier.objects.filter(pk__in=(ModifierModGroup.objects.values('modifier').filter(modifierGroup__in=(ModifierGroup.objects.filter(pk__in=(ProductModGroup.objects.filter(product=j.pk).values('modifierGroup'))))))):
+                mod.append(
+                    {
+                        "cost":m.modifierPrice,
+                        "modifierId": m.pk,
+                        "description": m.modifierDesc,
+                        "quantity": m.modifierQty,
+                        "sku": m.modifierSKU,
+                        "status":m.modifierStatus,
+                        "image":str(m.modifierImg)
+                    }                    
+                )
+            li.append({
+                "categoryId": i.pk,
+                "categoryName":i.categoryName,
+                "prdouctId": j.pk,
+                "text": j.productName,
+                "imagePath": str(j.productThumb),
+                "images":images,
+                "quantity": j.productQty,
+                "cost": j.productPrice,
+                "description": j.productDesc,
+                "allowCustomerNotes": True,
+                "vendorId": j.vendorId.pk,
+                "modifier":mod
+            })
+        products[i.pk]=li       
+        return Response({"products":products})
+        
     for i in Category.objects.all():
-        for pr in ProductCategory.objects.filter(category=i.pk):
-            print(pr.product.productName)
         li=[]
         for j in Product.objects.filter(pk__in=(ProductCategory.objects.filter(category=i.pk).values('product'))):
             images=[]
@@ -111,3 +160,64 @@ def productByCategory(request):
             })
         products[i.pk]=li
     return Response({"products":products})
+
+@api_view(["GET"])
+def productDetails(request,id=0,search=''):
+    if request.session.get('user_id') is None:
+        return JsonResponse({"kiosk":"session not found"})
+    data=Product.objects.all()
+    li=[]
+    if id!=0:
+        data=Product.objects.filter(pk=id)
+    if len(search)!=0:
+        data=Product.objects.filter(Q(productName__icontains=search)
+                                    |Q(productDesc__icontains=search)
+                                    |Q(pk__in=(ProductCategory.objects.filter(category__in=(
+                                        Category.objects.filter(categoryName__icontains=search)
+                                    ))))).distinct()
+    for j in data:
+            images=[]
+            for k in ProductImages.objects.filter(product=j.pk):
+                images.append(str(k.image))
+            mod=[]
+            for m in Modifier.objects.filter(pk__in=(ModifierModGroup.objects.values('modifier').filter(modifierGroup__in=(ModifierGroup.objects.filter(pk__in=(ProductModGroup.objects.filter(product=j.pk).values('modifierGroup'))))))):
+                mod.append(
+                    {
+                        "cost":m.modifierPrice,
+                        "modifierId": m.pk,
+                        "description": m.modifierDesc,
+                        "quantity": m.modifierQty,
+                        "sku": m.modifierSKU,
+                        "status":m.modifierStatus,
+                        "image":str(m.modifierImg)
+                    }                    
+                )
+            # i=ProductCategory.objects.get(product=id)
+            li.append({
+                # "categoryId": i.category.pk,
+                # "categoryName":i.category.categoryName,
+                "prdouctId": j.pk,
+                "text": j.productName,
+                "imagePath": str(j.productThumb),
+                "images":images,
+                "quantity": j.productQty,
+                "cost": j.productPrice,
+                "description": j.productDesc,
+                "allowCustomerNotes": True,
+                "vendorId": j.vendorId.pk,
+                "modifier":mod
+            })
+    return Response({'product':li})
+
+        
+
+@api_view((["GET","POST"]))
+def addToCart(request):
+    data = JSONParser().parse(request)
+    for v in data:
+        # print(data[v])
+        if isinstance(data[v],list):
+            for ind,i in enumerate( data[v]):
+                for a in i:
+                    print(data[v][ind][a])
+    return Response({"POST":data})
