@@ -2,3 +2,16 @@
 *.pys
 env
 __pycache__
+*.json
+
+static/admin
+static/admin-lte
+static/css
+static/js
+static/pages
+static/img
+static/dist
+static/docs
+static/fonts
+static/plugins
+static/rest_framework

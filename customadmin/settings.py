@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'corsheaders',
     'rest_framework',
     'django.contrib.staticfiles',
     'core',
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -134,4 +136,14 @@ STATICFILES_DIRS =('static/admin/',
 
 
 CSRF_TRUSTED_ORIGINS = ['https://80c0-2401-4900-1c17-fb3-1a0-b747-90d2-c29d.in.ngrok.io','http://127.0.0.1:8000/']
-# CSRF_TRUSTED_ORIGINS = ['*']
+CORS_ORIGIN_ALLOW = True
+CORS_ALLOW_ALL_ORIGINS = True
+li=[
+    "http://127.0.0.1:8000",
+    "https://moviespaceproj.herokuapp.com",
+    "http://127.0.0.1:5500",
+    "https://gitofvishal.github.io",
+]
+CORS_ORIGIN_WHITELIST  = li
+CORS_ALLOWED_ORIGINS = li
+CSRF_TRUSTED_ORIGINS = li

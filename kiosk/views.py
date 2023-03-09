@@ -7,22 +7,36 @@ from core.models import *
 from django.db.models import Avg,Q
 from django.http import JsonResponse
 from rest_framework.parsers import JSONParser
-import base64
+from deep_translator import GoogleTranslator
+# from indic_transliteration.sanscript import transliterate
+# from indic_transliteration import sanscript  
+def trans(txt,lang):
+    return GoogleTranslator(source='auto', target=lang).translate(txt)
 
 def index(request):
     if request.session.get('user_id') is None:
-        return JsonResponse({"kiosk":"session not found"})
+        text="judge not thou me , as i jugde not thee. betwixt the stirrup and the ground,mercy i sought ,and mercy found"
+        # pr=(transliterate(text, sanscript.ITRANS,sanscript.DEVANAGARI))
+        p=trans(text,"mr")
+        return JsonResponse({"text":text,"script":'pr',"translation":p})
     return JsonResponse({"kiosk":"app"})
-        
+
+
 @api_view(["POST"])
 def login(request):
     data = JSONParser().parse(request)
     try:
         user=VendorLog.objects.get(Q(password=data['password'])&(Q(userName= data['username'])|Q(email= data['username'])))
         request.session['user_id'] = user.pk
+        # if request.session.test_cookie_worked():
+        #     request.session.delete_test_cookie()
+        #     return Response({"A":"You're logged in"})
+        # else:
+        #     return Response("Please enable cookies and try again.")
         return Response({"msg":"user found","userid":user.pk})
     except VendorLog.DoesNotExist:
         return Response({"err":"user not found"})
+
 
 def logout_view(request):
     id=request.session.get('user_id')
@@ -31,10 +45,11 @@ def logout_view(request):
         return JsonResponse({"msg":'user logged out'})
     return JsonResponse({"msg":'not logged in '})
 
+
 @api_view(['GET'])
 def allCategory(request,id=0):
-    if request.session.get('user_id') is None:
-        return JsonResponse({"kiosk":"session not found"})
+    # if request.session.get('user_id') is None:
+    #     return JsonResponse({"kiosk":"session not found"})
     data=[]
     if id!=0:
         i = Category.objects.get(pk=id)
@@ -82,6 +97,7 @@ def allCategory(request,id=0):
     }
   ]
     return Response({"Category":data,'banner':banner})
+
 
 @api_view(["GET"])
 def productByCategory(request,id=0):
@@ -161,6 +177,7 @@ def productByCategory(request,id=0):
         products[i.pk]=li
     return Response({"products":products})
 
+
 @api_view(["GET"])
 def productDetails(request,id=0,search=''):
     if request.session.get('user_id') is None:
@@ -209,7 +226,6 @@ def productDetails(request,id=0,search=''):
             })
     return Response({'product':li})
 
-        
 
 @api_view((["GET","POST"]))
 def addToCart(request):
