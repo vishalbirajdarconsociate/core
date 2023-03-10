@@ -8,17 +8,31 @@ from django.db.models import Avg,Q
 from django.http import JsonResponse
 from rest_framework.parsers import JSONParser
 from deep_translator import GoogleTranslator
-# from indic_transliteration.sanscript import transliterate
-# from indic_transliteration import sanscript  
-def trans(txt,lang):
-    return GoogleTranslator(source='auto', target=lang).translate(txt)
+from cachetools import cached, TTLCache
+
+
+# translating then caching it in memory
+cache = TTLCache(maxsize=1000, ttl=3000)
+l='en'
+@api_view(["GET"])
+def selectlang(request,lang='en'):
+    global l
+    l=lang
+    return JsonResponse({"kiosk":l})
+@cached(cache)
+def tolang(txt):
+    return GoogleTranslator(source='en', target=l).translate(txt) 
+def trans(txt):
+    if l!='en':  
+        data=tolang(txt)
+    else:
+        data=txt
+    return data
 
 def index(request):
     if request.session.get('user_id') is None:
         text="judge not thou me , as i jugde not thee. betwixt the stirrup and the ground,mercy i sought ,and mercy found"
-        # pr=(transliterate(text, sanscript.ITRANS,sanscript.DEVANAGARI))
-        p=trans(text,"mr")
-        return JsonResponse({"text":text,"script":'pr',"translation":p})
+        return JsonResponse({"text":text,"translation":trans(text)})
     return JsonResponse({"kiosk":"app"})
 
 
@@ -28,11 +42,6 @@ def login(request):
     try:
         user=VendorLog.objects.get(Q(password=data['password'])&(Q(userName= data['username'])|Q(email= data['username'])))
         request.session['user_id'] = user.pk
-        # if request.session.test_cookie_worked():
-        #     request.session.delete_test_cookie()
-        #     return Response({"A":"You're logged in"})
-        # else:
-        #     return Response("Please enable cookies and try again.")
         return Response({"msg":"user found","userid":user.pk})
     except VendorLog.DoesNotExist:
         return Response({"err":"user not found"})
@@ -48,26 +57,14 @@ def logout_view(request):
 
 @api_view(['GET'])
 def allCategory(request,id=0):
-    # if request.session.get('user_id') is None:
-    #     return JsonResponse({"kiosk":"session not found"})
-    data=[]
-    if id!=0:
-        i = Category.objects.get(pk=id)
+    info=Category.objects.filter(pk=id) if id!=0 else Category.objects.all()
+    data=[]           
+    for i in info:
         data.append({
       "categoryId": i.pk,
-      "name": i.categoryName,
+      "name": trans(i.categoryName),
       "vendorId": i.vendorId.pk,
-      "description": i.categoryDescription,
-      "image":str(i.categoryImgage)
-        })
-        return Response({"Category":data})
-           
-    for i in Category.objects.all():
-        data.append({
-      "categoryId": i.pk,
-      "name": i.categoryName,
-      "vendorId": i.vendorId.pk,
-      "description": i.categoryDescription,
+      "description": trans(i.categoryDescription),
       "image":str(i.categoryImgage)
         })
     banner=[
@@ -104,8 +101,8 @@ def productByCategory(request,id=0):
     if request.session.get('user_id') is None:
         return Response({"kiosk":"session not found"})
     products={}
-    if id!=0:
-        i=Category.objects.get(pk=id)
+    data=Category.objects.filter(pk=id) if id!=0 else Category.objects.all()   
+    for i in data:
         li=[]
         for j in Product.objects.filter(pk__in=(ProductCategory.objects.filter(category=i.pk).values('product'))):
             images=[]
@@ -117,7 +114,8 @@ def productByCategory(request,id=0):
                     {
                         "cost":m.modifierPrice,
                         "modifierId": m.pk,
-                        "description": m.modifierDesc,
+                        "name":trans(m.modifierName),
+                        "description": trans(m.modifierDesc),
                         "quantity": m.modifierQty,
                         "sku": m.modifierSKU,
                         "status":m.modifierStatus,
@@ -126,50 +124,14 @@ def productByCategory(request,id=0):
                 )
             li.append({
                 "categoryId": i.pk,
-                "categoryName":i.categoryName,
+                "categoryName":trans( i.categoryName),
                 "prdouctId": j.pk,
-                "text": j.productName,
+                "text":trans( j.productName),
                 "imagePath": str(j.productThumb),
                 "images":images,
                 "quantity": j.productQty,
                 "cost": j.productPrice,
-                "description": j.productDesc,
-                "allowCustomerNotes": True,
-                "vendorId": j.vendorId.pk,
-                "modifier":mod
-            })
-        products[i.pk]=li       
-        return Response({"products":products})
-        
-    for i in Category.objects.all():
-        li=[]
-        for j in Product.objects.filter(pk__in=(ProductCategory.objects.filter(category=i.pk).values('product'))):
-            images=[]
-            for k in ProductImages.objects.filter(product=j.pk):
-                images.append(str(k.image))
-            mod=[]
-            for m in Modifier.objects.filter(pk__in=(ModifierModGroup.objects.values('modifier').filter(modifierGroup__in=(ModifierGroup.objects.filter(pk__in=(ProductModGroup.objects.filter(product=j.pk).values('modifierGroup'))))))):
-                mod.append(
-                    {
-                        "cost":m.modifierPrice,
-                        "modifierId": m.pk,
-                        "description": m.modifierDesc,
-                        "quantity": m.modifierQty,
-                        "sku": m.modifierSKU,
-                        "status":m.modifierStatus,
-                        "image":str(m.modifierImg)
-                    }                    
-                )
-            li.append({
-                "categoryId": i.pk,
-                "categoryName":i.categoryName,
-                "prdouctId": j.pk,
-                "text": j.productName,
-                "imagePath": str(j.productThumb),
-                "images":images,
-                "quantity": j.productQty,
-                "cost": j.productPrice,
-                "description": j.productDesc,
+                "description": trans(j.productDesc),
                 "allowCustomerNotes": True,
                 "vendorId": j.vendorId.pk,
                 "modifier":mod

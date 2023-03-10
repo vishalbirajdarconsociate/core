@@ -72,12 +72,16 @@ class ModifierGroup(models.Model):
 class ProductModGroup(models.Model):
     modifierGroup=models.ForeignKey(ModifierGroup, on_delete=models.CASCADE,null=True,blank=True)
     product=models.ForeignKey(Product, on_delete=models.CASCADE,null=True,blank=True)
+    class Meta:
+        unique_together = ('product', 'modifierGroup')
     def __str__(self):
         return self.modifierGroup.name+" | "+self.product.productName
 
 class ModifierModGroup(models.Model):
     modifierGroup=models.ForeignKey(ModifierGroup, on_delete=models.CASCADE,null=True,blank=True)
     modifier=models.ForeignKey(Modifier, on_delete=models.CASCADE,null=True,blank=True)
+    class Meta:
+        unique_together = ('modifier', 'modifierGroup')
     def __str__(self):
         return self.modifierGroup.name+" | "+self.modifier.modifierName
     
