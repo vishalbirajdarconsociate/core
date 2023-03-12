@@ -36,9 +36,10 @@ def index(request):
     return JsonResponse({"kiosk":"app"})
 
 
-@api_view(["POST"])
+@api_view(["GET","POST"])
 def login(request):
-    data = JSONParser().parse(request)
+    print(request.data)
+    data = request.data
     try:
         user=VendorLog.objects.get(Q(password=data['password'])&(Q(userName= data['username'])|Q(email= data['username'])))
         request.session['user_id'] = user.pk

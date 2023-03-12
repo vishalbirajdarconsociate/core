@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'django.contrib.staticfiles',
     'core',
     'useradmin',
     'woostore',
@@ -130,9 +130,10 @@ STATIC_URL = '/static/'
 
 # STATIC_ROOT=os.path.join(BASE_DIR,'static')
 
-# STATICFILES_DIRS =('static/admin/',
-#                    'static/admin-lte/',
-#                    os.path.join(BASE_DIR,'static'))
+STATICFILES_DIRS =('static/admin/',
+                   'static/admin-lte/',
+                   'static',
+                   )
 
 
 CSRF_TRUSTED_ORIGINS = ['https://80c0-2401-4900-1c17-fb3-1a0-b747-90d2-c29d.in.ngrok.io','http://127.0.0.1:8000/']
