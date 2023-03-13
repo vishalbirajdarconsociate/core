@@ -96,7 +96,7 @@ def allCategory(request,id=0):
           "https://www.crazymasalafood.com/wp-content/images/1-37.jpg"
     }
   ]
-    return Response({"categories":data,'banner':banner})
+    return Response({"categories":data,'banners':banner})
 
 
 @api_view(["GET"])
@@ -187,7 +187,7 @@ def productDetails(request,id=0,search=''):
                 "description": j.productDesc,
                 "allowCustomerNotes": True,
                 "vendorId": j.vendorId.pk,
-                "modifier":mod
+                "modifiers":mod
             })
     return Response({'product':li})
 
