@@ -136,15 +136,13 @@ STATICFILES_DIRS =('static/admin/',
                    )
 
 
-CSRF_TRUSTED_ORIGINS = ['https://80c0-2401-4900-1c17-fb3-1a0-b747-90d2-c29d.in.ngrok.io','http://127.0.0.1:8000/']
 CORS_ORIGIN_ALLOW = True
 CORS_ALLOW_ALL_ORIGINS = True
-li=[
+li=["https://22b5-2401-4900-1c16-4ef6-7c87-59bb-6da4-7468.in.ngrok.io",
     "http://127.0.0.1:8000",
-    "https://moviespaceproj.herokuapp.com",
     "http://127.0.0.1:5500",
-    "https://gitofvishal.github.io",
 ]
+CSRF_TRUSTED_ORIGINS =li
 CORS_ORIGIN_WHITELIST  = li
 CORS_ALLOWED_ORIGINS = li
 CSRF_TRUSTED_ORIGINS = li

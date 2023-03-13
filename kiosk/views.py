@@ -30,13 +30,15 @@ def trans(txt):
     return data
 
 def index(request):
-    if request.session.get('user_id') is None:
-        text="judge not thou me , as i jugde not thee. betwixt the stirrup and the ground,mercy i sought ,and mercy found"
-        return JsonResponse({"text":text,"translation":trans(text)})
-    return JsonResponse({"kiosk":"app"})
+    # if request.session.get('user_id') is None:
+    #     return JsonResponse({"kiosk":"session not found"})
+    # if request.session.get('user_id') is None:
+    text="judge not thou me , as i jugde not thee. betwixt the stirrup and the ground,mercy i sought ,and mercy found"
+    return JsonResponse({"text":text,"translation":trans(text)})
+    # return JsonResponse({"kiosk":"app"})
 
 
-@api_view(["GET","POST"])
+@api_view(["POST"])
 def login(request):
     print(request.data)
     data = request.data

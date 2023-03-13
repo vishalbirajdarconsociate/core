@@ -54,7 +54,8 @@ class Modifier(models.Model):
     modifierPrice=models.FloatField(null=True,blank=True)
     modifierDesc=models.CharField( max_length=50,null=True,blank=True)
     modifierQty=models.IntegerField(default=0)
-    modifierStatus=models.IntegerField(default=0)
+    # modifierStatus=models.IntegerField(default=0)
+    modifierStatus=models.BooleanField(default=False)
     vendorId=models.ForeignKey(VendorLog, on_delete=models.CASCADE)
     def __str__(self):
         return self.modifierName
