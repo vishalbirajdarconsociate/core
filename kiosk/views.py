@@ -137,7 +137,7 @@ def productByCategory(request,id=0):
                 "description": trans(j.productDesc),
                 "allowCustomerNotes": True,
                 "vendorId": j.vendorId.pk,
-                "modifier":mod
+                "modifiers":mod
             })
         products[i.pk]=li
     return Response({"products":products})
