@@ -96,13 +96,13 @@ def allCategory(request,id=0):
           "https://www.crazymasalafood.com/wp-content/images/1-37.jpg"
     }
   ]
-    return Response({"Category":data,'banner':banner})
+    return Response({"categories":data,'banner':banner})
 
 
 @api_view(["GET"])
 def productByCategory(request,id=0):
-    if request.session.get('user_id') is None:
-        return Response({"kiosk":"session not found"})
+    # if request.session.get('user_id') is None:
+    #     return Response({"kiosk":"session not found"})
     products={}
     data=Category.objects.filter(pk=id) if id!=0 else Category.objects.all()   
     for i in data:
@@ -145,8 +145,8 @@ def productByCategory(request,id=0):
 
 @api_view(["GET"])
 def productDetails(request,id=0,search=''):
-    if request.session.get('user_id') is None:
-        return JsonResponse({"kiosk":"session not found"})
+    # if request.session.get('user_id') is None:
+    #     return JsonResponse({"kiosk":"session not found"})
     data=Product.objects.all()
     li=[]
     if id!=0:
