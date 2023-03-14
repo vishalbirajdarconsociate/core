@@ -196,9 +196,16 @@ def productDetails(request,id=0,search=''):
             })
     return Response({'product':li})
 
-def getDiscounts(request,codw):
+def getDiscounts(request):
     data=[]
-    for i in KioskDiscount.objects.all():
+    if request.method == 'GET':
+        discount=KioskDiscount.objects.all()
+    elif request.method == 'POST':
+        try:
+            discount=KioskDiscount.objects.filter(discountCode=JSONParser().parse(request)['code'])
+        except:
+            discount=[]
+    for i in discount:
         data.append(
             {
             "id":i.pk,
@@ -206,11 +213,10 @@ def getDiscounts(request,codw):
             "discription":i.discountDesc,
             "discount":i.discount,
             "total":i.discountCost
-
         })
     return JsonResponse({"promocodes":data})
 
-# @api_view(['POST'])
+@api_view(['POST'])
 def applyDiscount(request):
     data = JSONParser().parse(request)
     print(data['code'])
