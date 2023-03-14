@@ -20,19 +20,26 @@ def selectlang(request,lang='en'):
     global l
     l=lang
     return JsonResponse({"kiosk":l})
+
+
 # @cached(cache)
 def tolang(txt):
     return GoogleTranslator(source='en', target=l).translate(txt)
+
+
 def trans(txt):
     if l!='en':
-        data=tolang(txt).encode('utf-8')
+        data=tolang(txt)
+        print(data)
     else:
         data=txt
     return data
-@api_view(["GET"])
+
+
+# @api_view(["GET"])
 def index(request):
     text="judge not thou me , as i jugde not thee. betwixt the stirrup and the ground,mercy i sought ,and mercy found"
-    return Response({"text":text,"translation":trans(text)})
+    return JsonResponse({"text":text,"translation":trans(text)})
 
 
 @api_view(["POST"])
@@ -55,14 +62,14 @@ def logout_view(request):
     return JsonResponse({"msg":'not logged in '})
 
 
-@api_view(['GET'])
+# @api_view(['GET'])
 def allCategory(request,id=0):
     info=Category.objects.filter(pk=id) if id!=0 else Category.objects.all()
     data=[]           
     for i in info:
         data.append({
       "categoryId": i.pk,
-      "name":str( trans(i.categoryName)),
+      "name":trans(i.categoryName),
       "vendorId": i.vendorId.pk,
       "description": trans(i.categoryDescription),
       "image":str(i.categoryImgage)
@@ -93,7 +100,7 @@ def allCategory(request,id=0):
           "https://www.crazymasalafood.com/wp-content/images/1-37.jpg"
     }
   ]
-    return Response({"categories":data,'banners':banner})
+    return JsonResponse({"categories":data,'banners':banner})
 
 
 @api_view(["GET"])
