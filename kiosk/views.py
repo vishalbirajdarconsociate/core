@@ -25,17 +25,14 @@ def tolang(txt):
     return GoogleTranslator(source='en', target=l).translate(txt)
 def trans(txt):
     if l!='en':
-        data=tolang(txt)
+        data=tolang(txt).encode('utf-8')
     else:
         data=txt
     return data
 @api_view(["GET"])
 def index(request):
     text="judge not thou me , as i jugde not thee. betwixt the stirrup and the ground,mercy i sought ,and mercy found"
-    encoded_data = json.dumps({"text":text,"translation":trans(text)}).encode('utf-8')
-    print(encoded_data)
-    # return Response([encoded_data], content_type="application/json; charset=utf-8")
-    return Response({"text":text,"translation":trans(text).encode('utf-8')})
+    return Response({"text":text,"translation":trans(text)})
 
 
 @api_view(["POST"])
@@ -65,7 +62,7 @@ def allCategory(request,id=0):
     for i in info:
         data.append({
       "categoryId": i.pk,
-      "name": trans(i.categoryName).encode('utf-8'),
+      "name":str( trans(i.categoryName)),
       "vendorId": i.vendorId.pk,
       "description": trans(i.categoryDescription),
       "image":str(i.categoryImgage)
