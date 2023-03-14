@@ -22,7 +22,7 @@ def selectlang(request,lang='en'):
     return JsonResponse({"kiosk":l})
 
 
-# @cached(cache)
+@cached(cache)
 def tolang(txt):
     return GoogleTranslator(source='en', target=l).translate(txt)
 
@@ -103,7 +103,7 @@ def allCategory(request,id=0):
     return JsonResponse({"categories":data,'banners':banner})
 
 
-@api_view(["GET"])
+# @api_view(["GET"])
 def productByCategory(request,id=0):
     # if request.session.get('user_id') is None:
     #     return Response({"kiosk":"session not found"})
@@ -144,7 +144,7 @@ def productByCategory(request,id=0):
                 "modifiers":mod
             })
         products[i.pk]=li
-    return Response({"products":products})
+    return JsonResponse({"products":products})
 
 
 @api_view(["GET"])
