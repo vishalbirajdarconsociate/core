@@ -210,6 +210,16 @@ def getDiscounts(request):
         })
     return JsonResponse({"promocodes":data})
 
+@api_view(['POST'])
+def applyDiscount(request):
+    data = JSONParser().parse(request)
+    print(data['code'])
+    try:
+        discount=KioskDiscount.objects.get(discountCode=data['code']).discount
+    except:
+        discount='no match found'
+    return JsonResponse({"discount":discount})
+
 @api_view((["GET","POST"]))
 def addToCart(request):
     data = JSONParser().parse(request)
