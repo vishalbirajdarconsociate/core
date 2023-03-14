@@ -196,7 +196,7 @@ def productDetails(request,id=0,search=''):
             })
     return Response({'product':li})
 
-def getDiscounts(request):
+def getDiscounts(request,codw):
     data=[]
     for i in KioskDiscount.objects.all():
         data.append(
@@ -210,7 +210,7 @@ def getDiscounts(request):
         })
     return JsonResponse({"promocodes":data})
 
-@api_view(['POST'])
+# @api_view(['POST'])
 def applyDiscount(request):
     data = JSONParser().parse(request)
     print(data['code'])
