@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -19,23 +20,22 @@ def selectlang(request,lang='en'):
     global l
     l=lang
     return JsonResponse({"kiosk":l})
-@cached(cache)
+# @cached(cache)
 def tolang(txt):
-    return GoogleTranslator(source='en', target=l).translate(txt) 
+    return GoogleTranslator(source='en', target=l).translate(txt)
 def trans(txt):
-    if l!='en':  
+    if l!='en':
         data=tolang(txt)
     else:
         data=txt
     return data
-
+@api_view(["GET"])
 def index(request):
-    # if request.session.get('user_id') is None:
-    #     return JsonResponse({"kiosk":"session not found"})
-    # if request.session.get('user_id') is None:
     text="judge not thou me , as i jugde not thee. betwixt the stirrup and the ground,mercy i sought ,and mercy found"
-    return JsonResponse({"text":text,"translation":trans(text)})
-    # return JsonResponse({"kiosk":"app"})
+    encoded_data = json.dumps({"text":text,"translation":trans(text)}).encode('utf-8')
+    print(encoded_data)
+    # return Response([encoded_data], content_type="application/json; charset=utf-8")
+    return Response({"text":text,"translation":trans(text).encode('utf-8')})
 
 
 @api_view(["POST"])
@@ -65,7 +65,7 @@ def allCategory(request,id=0):
     for i in info:
         data.append({
       "categoryId": i.pk,
-      "name": trans(i.categoryName),
+      "name": trans(i.categoryName).encode('utf-8'),
       "vendorId": i.vendorId.pk,
       "description": trans(i.categoryDescription),
       "image":str(i.categoryImgage)
