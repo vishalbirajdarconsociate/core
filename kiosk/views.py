@@ -221,11 +221,17 @@ def applyDiscount(request):
     data = JSONParser().parse(request)
     print(data['code'])
     try:
-        discount=KioskDiscount.objects.get(discountCode=data['code']).discount
+        i=KioskDiscount.objects.get(discountCode=data['code'])
+        discount=            {
+            "id":i.pk,
+            "code":i.discountCode,
+            "discription":i.discountDesc,
+            "discount":i.discount,
+            "total":i.discountCost
+        }
     except:
         discount='no match found'
     return JsonResponse({"discount":discount})
-
 @api_view((["GET","POST"]))
 def addToCart(request):
     data = JSONParser().parse(request)
