@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.contrib.auth import logout
 from useradmin.models import *
 from core.models import *
+from .models import *
 from django.db.models import Avg,Q
 from django.http import JsonResponse
 from rest_framework.parsers import JSONParser
@@ -12,21 +13,21 @@ from deep_translator import GoogleTranslator
 from cachetools import cached, TTLCache
 
 
-# translating then caching it in memory
 cache = TTLCache(maxsize=1000, ttl=3000)
 l='en'
+# select a language in which to translate
 @api_view(["GET"])
 def selectlang(request,lang='en'):
     global l
     l=lang
     return JsonResponse({"kiosk":l})
 
-
+# translate to selected language then caching it in RAM
 @cached(cache)
 def tolang(txt):
     return GoogleTranslator(source='en', target=l).translate(txt)
 
-
+# translate if language is other that english
 def trans(txt):
     if l!='en':
         data=tolang(txt)
@@ -119,7 +120,7 @@ def productByCategory(request,id=0):
             for m in Modifier.objects.filter(pk__in=(ModifierModGroup.objects.values('modifier').filter(modifierGroup__in=(ModifierGroup.objects.filter(pk__in=(ProductModGroup.objects.filter(product=j.pk).values('modifierGroup'))))))):
                 mod.append(
                     {
-                        "cost":m.modifierPrice,
+                        "cost":trans(m.modifierPrice),
                         "modifierId": m.pk,
                         "name":trans(m.modifierName),
                         "description": trans(m.modifierDesc),
@@ -137,7 +138,7 @@ def productByCategory(request,id=0):
                 "imagePath": str(j.productThumb),
                 "images":images,
                 "quantity": j.productQty,
-                "cost": j.productPrice,
+                "cost": trans(j.productPrice),
                 "description": trans(j.productDesc),
                 "allowCustomerNotes": True,
                 "vendorId": j.vendorId.pk,
@@ -195,6 +196,19 @@ def productDetails(request,id=0,search=''):
             })
     return Response({'product':li})
 
+def getDiscounts(request):
+    data=[]
+    for i in KioskDiscount.objects.all():
+        data.append(
+            {
+            "id":i.pk,
+            "code":i.discountCode,
+            "discription":i.discountDesc,
+            "discount":i.discount,
+            "total":i.discountCost
+
+        })
+    return JsonResponse({"promocodes":data})
 
 @api_view((["GET","POST"]))
 def addToCart(request):

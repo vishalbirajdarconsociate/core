@@ -31,5 +31,6 @@ urlpatterns = [
     path('productDetails/',productDetails,name="allProduct"),
     path('productDetails/<int:id>',productDetails,name="singleProduct"),
     path('productDetails/<str:search>',productDetails,name="searchProduct"),
-    path('addToCart/',addToCart,name="addToCart")
+    path('addToCart/',addToCart,name="addToCart"),
+    path('allDiscounts/',getDiscounts,name='allDiscounts')
 ]

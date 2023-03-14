@@ -9,3 +9,12 @@ class Customer(models.Model):
     shippingAddress=models.TextField()
     billingAddress=models.TextField()
     Vendor=models.ForeignKey(VendorLog, on_delete=models.CASCADE)
+
+class KioskDiscount(models.Model):
+    discountDesc=models.TextField(default='')
+    discountCode=models.CharField(max_length=50,default='')
+    discount=models.FloatField(default=0)
+    discountCost=models.FloatField(default=0)
+    def __str__(self):
+        return self.discountDesc+" | "+self.discountCode
+    
